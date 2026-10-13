@@ -57,20 +57,6 @@
     });
   }
 
-  /* ----------------------------------------------- days to the holidays
-     Real numbers, computed from today. Written before mount so the engine's
-     count device ticks up to them on entry. */
-  document.querySelectorAll('[data-days]').forEach(function (el) {
-    var md = el.getAttribute('data-days').split('-').map(Number);
-    var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var target = new Date(now.getFullYear(), md[0] - 1, md[1]);
-    if (target < today) target = new Date(now.getFullYear() + 1, md[0] - 1, md[1]);
-    var days = Math.round((target - today) / 864e5);
-    el.textContent = String(days);
-    el.setAttribute('data-sc-count', '0 ' + days);
-    el.setAttribute('data-sc-count-ms', '1500');
-  });
-
   /* stagger index for the room rail's settle */
   document.querySelectorAll('.rail > .room, .rail > .rail__facts').forEach(function (el, i) { el.style.setProperty('--i', String(i + 1)); });
 
@@ -428,35 +414,6 @@
     });
   })();
 
-  /* ----------------------------------------------------- the garland */
-  var xmas = document.getElementById('blagdani');
-  var bulbs = (function () {
-    var svg = xmas.querySelector('[data-garland]'); if (!svg) return [];
-    var NS = 'http://www.w3.org/2000/svg', N = 28, W = 1600, out = [], pts = [], d = '';
-    svg.innerHTML = '<defs><radialGradient id="bulb-glow"><stop offset="0" stop-color="#FFC77A" stop-opacity=".4"/><stop offset="1" stop-color="#FFC77A" stop-opacity="0"/></radialGradient></defs>';
-    for (var j = 0; j < 4; j++) {          // four swags across the width
-      var x0 = j * W / 4, x1 = (j + 1) * W / 4;
-      for (var k = 0; k <= 20; k++) { var u = k / 20; pts.push([lerp(x0, x1, u), 14 + 74 * 4 * u * (1 - u)]); }
-    }
-    pts.forEach(function (q, i) { d += (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1); });
-    var path = document.createElementNS(NS, 'path'); path.setAttribute('d', d); svg.appendChild(path);
-    var halos = document.createElementNS(NS, 'g'), dots = document.createElementNS(NS, 'g');
-    for (var i = 0; i < N; i++) {
-      var q = pts[Math.round((i + 0.5) / N * (pts.length - 1))];
-      var h = document.createElementNS(NS, 'circle'); h.setAttribute('class', 'halo'); h.setAttribute('cx', q[0]); h.setAttribute('cy', q[1] + 9); h.setAttribute('r', 12);
-      var c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', q[0]); c.setAttribute('cy', q[1] + 9); c.setAttribute('r', 3.4);
-      halos.appendChild(h); dots.appendChild(c); out.push([c, h]);
-    }
-    svg.appendChild(halos); svg.appendChild(dots);
-    return out;
-  })();
-  var litShown = -1;
-  function drawGarland() {
-    var n = reduce ? bulbs.length : Math.round(bulbs.length * smooth(0.08, 0.42, prog(xmas)));
-    if (n === litShown) return; litShown = n;
-    for (var i = 0; i < bulbs.length; i++) { var on = i < n; bulbs[i][0].classList.toggle('on', on); bulbs[i][1].classList.toggle('on', on); }
-  }
-
   /* --------------------------------------------- rooms on a curved rail */
   var roomsSec = document.getElementById('sobe');
   var roomCards = Array.prototype.slice.call(document.querySelectorAll('.rail .room'));
@@ -473,42 +430,53 @@
     }
   }
 
-  /* ------------------------------------------------ the Christmas zoom
-     Nine tiles at the stage centre, one transform each per frame. Outer tiles
-     are laid out at twice their cell size and scaled down (sharp when the zoom
-     enlarges them); the centre is laid out at full stage size, scaled down to
-     its cell and clipped to the cell's shape, and ends at exactly 1:1. */
-  var zgrid = xmas.querySelector('[data-zgrid]'), ztiles = Array.prototype.slice.call(zgrid.children), Z = null, zKey = '';
-  var xmasStage = xmas.querySelector('[data-sc-stage]');
-  measureHooks.push(function () {
-    var W = VW, H = VH, portrait = W < H * 0.9, a = portrait ? 0.75 : 1.6, g = clamp(W * 0.012, 8, 18);
-    var cw = Math.min((0.92 * W - 2 * g) / 3, ((0.8 * H - 2 * g) / 3) * a), ch = cw / a;
-    zgrid.style.setProperty('--tw2', (2 * cw).toFixed(1) + 'px');
-    zgrid.style.setProperty('--th2', (2 * ch).toFixed(1) + 'px');
-    Z = { W: W, H: H, cw: cw, ch: ch, g: g, S: Math.max(W / cw, H / ch), s0: Math.max(cw / W, ch / H) };
-    zKey = '';
+  /* ------------------------------------------------ the pool window
+     The window starts narrow between the two words of the headline and the
+     scroll opens it to the full screen while the engine scrubs the glide
+     inside it. Only a clip-path changes, so the film is never enlarged. On a
+     wide screen the words sit left and right of the window, on a tall one
+     above and below; each is sized once, on measure, to fit its side. */
+  var pool = document.getElementById('bazen');
+  var poolWin = pool && pool.querySelector('[data-pool-win]');
+  var poolScrim = pool && pool.querySelector('.pool__scrim');
+  var poolTitle = pool && pool.querySelector('.pool__title');
+  var poolWords = pool ? Array.prototype.slice.call(pool.querySelectorAll('.pool__w')) : [];
+  var poolStage = pool && pool.querySelector('[data-sc-stage]');
+  var PW = null, poolKey = '';
+  if (pool) measureHooks.push(function () {
+    var W = VW, H = VH, wide = W > H * 0.9, gut = clamp(W * 0.05, 16, 64), bar = 64;
+    var w0 = wide ? Math.min(W * 0.27, 470) : W * 0.6;
+    var h0 = wide ? Math.min(H * 0.66, w0 * 1.5) : Math.min(H * 0.46, w0 * 1.45);
+    var gap = wide ? clamp(W * 0.022, 16, 40) : clamp(H * 0.022, 12, 24);
+    poolTitle.style.setProperty('--pool-fs', '100px');
+    var m = poolWords.map(function (el) { return { w: el.offsetWidth, h: el.offsetHeight }; });
+    var widest = Math.max(m[0].w, m[1].w);
+    var fs = wide ? Math.min(W * 0.085, H * 0.17, ((W - w0) / 2 - gap - gut) / widest * 100)
+                  : Math.min(W * 0.17, (W - 2 * gut) / widest * 100, ((H - h0) / 2 - gap - bar) / 1.05);
+    fs = Math.max(28, fs);
+    poolTitle.style.setProperty('--pool-fs', fs.toFixed(1) + 'px');
+    var k = fs / 100;
+    PW = { W: W, H: H, wide: wide, w0: w0, h0: h0, cy0: H * (wide ? 0.53 : 0.52), gap: gap,
+           ws: m.map(function (q) { return { w: q.w * k, h: q.h * k }; }) };
+    poolKey = '';
   });
-  function drawZoom() {
-    if (!Z) return;
-    var p = prog(xmas), e = reduce ? 1 : smooth(0.06, 0.58, p);
-    var xs = smooth(0.5, 0.68, p).toFixed(3);              // the copy's scrim follows p, not the zoom
-    if (xs !== drawZoom.xs) { drawZoom.xs = xs; xmas.style.setProperty('--xs', xs); }
-    var key = e.toFixed(4); if (key === zKey) return; zKey = key;
-    var z = Math.pow(Z.S, e);
-    for (var i = 0; i < 9; i++) {
-      var el = ztiles[i];
-      if (i === 4) {
-        var k = Math.min(1, Z.s0 * z), bw = Z.cw * z / k, bh = Z.ch * z / k;
-        var ix = Math.max(0, (Z.W - bw) / 2), iy = Math.max(0, (Z.H - bh) / 2);
-        el.style.transform = 'translate(-50%,-50%) scale(' + k.toFixed(4) + ')';
-        el.style.clipPath = 'inset(' + iy.toFixed(1) + 'px ' + ix.toFixed(1) + 'px round ' + (6 * (1 - e) / k).toFixed(1) + 'px)';
-      } else {
-        var col = i % 3 - 1, row = Math.floor(i / 3) - 1;
-        var dx = col * (Z.cw + Z.g) * z, dy = row * (Z.ch + Z.g) * z;
-        el.style.transform = 'translate(-50%,-50%) translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + (0.5 * z).toFixed(4) + ')';
-      }
-    }
-    xmasStage.setAttribute('data-sc-verify-state', 'z:' + z.toFixed(2));
+  function drawPool() {
+    if (!PW) return;
+    var p = prog(pool), e = reduce ? 1 : smooth(0.03, 0.6, p);
+    var fade = reduce ? 0 : 1 - smooth(0.2, 0.46, p), dark = smooth(0.46, 0.66, p);
+    var key = e.toFixed(4) + '|' + fade.toFixed(3) + '|' + dark.toFixed(3) + '|' + PW.W + 'x' + PW.H;
+    if (key === poolKey) return; poolKey = key;
+    var W = PW.W, H = PW.H, w = lerp(PW.w0, W, e), h = lerp(PW.h0, H, e), cy = lerp(PW.cy0, H / 2, e);
+    var top = cy - h / 2, side = (W - w) / 2, bottom = H - top - h;
+    poolWin.style.clipPath = 'inset(' + Math.max(0, top).toFixed(1) + 'px ' + side.toFixed(1) + 'px ' + Math.max(0, bottom).toFixed(1) + 'px ' + side.toFixed(1) + 'px round ' + (8 * (1 - e)).toFixed(1) + 'px)';
+    var a = PW.ws[0], b = PW.ws[1], ax, ay, bx, by;
+    if (PW.wide) { ax = side - PW.gap - a.w; ay = cy - a.h / 2; bx = side + w + PW.gap; by = cy - b.h / 2; }
+    else { ax = (W - a.w) / 2; ay = top - PW.gap - a.h; bx = (W - b.w) / 2; by = top + h + PW.gap; }
+    poolWords[0].style.transform = 'translate3d(' + ax.toFixed(1) + 'px,' + ay.toFixed(1) + 'px,0)';
+    poolWords[1].style.transform = 'translate3d(' + bx.toFixed(1) + 'px,' + by.toFixed(1) + 'px,0)';
+    poolWords[0].style.opacity = poolWords[1].style.opacity = fade.toFixed(3);
+    poolScrim.style.opacity = dark.toFixed(3);
+    poolStage.setAttribute('data-sc-verify-state', 'open:' + e.toFixed(2));
   }
 
   /* --------------------------------------------------------- the loop
@@ -552,12 +520,12 @@
 
     setLive(hero, onScreen(hero, 0.05));
     setLive(peak, onScreen(peak, 0.2));
-    var liveWell = setLive(wellness, onScreen(wellness, 0)), liveXmas = setLive(xmas, onScreen(xmas, 0.15));
+    var liveWell = setLive(wellness, onScreen(wellness, 0));
     var liveRooms = setLive(roomsSec, onScreen(roomsSec, 0.15));
+    if (pool && setLive(pool, onScreen(pool, 0.2))) drawPool();
     for (var k = 0; k < snows.length; k++) if (liveState.get(snows[k].host)) snows[k].s.draw(dt, vel);
     if (steam && liveWell) steam(dt);
     if (lookGL && onScreen(look, 0.2)) lookGL();
-    if (liveXmas) { drawZoom(); drawGarland(); }
     if (liveRooms) drawRooms();
 
     requestAnimationFrame(frame);

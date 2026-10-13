@@ -11,7 +11,9 @@
 <meta property="og:description" content="Kuća od brvana u šumi Gorskog kotara, za do 10 gostiju.">
 <meta property="og:image" content="video/tura-v1.webp">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230B1115'/><path d='M16 6 6 24h20z' fill='none' stroke='%23E8A25B' stroke-width='2.4' stroke-linejoin='round'/></svg>">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="video/tura-v1.webp" media="(min-width: 861px), (orientation: landscape)" fetchpriority="high">
 <link rel="preload" as="image" href="video/tura-v1-p.webp" media="(max-width: 860px) and (orientation: portrait)" fetchpriority="high">
@@ -38,7 +40,8 @@
      temperature where the visitor is standing. It is also the navigation. -->
 <header class="bar">
   <a class="bar__mark" href="#dolazak" aria-label="Villa Arka">
-    <svg viewBox="0 0 28 24" aria-hidden="true"><path d="M14 2 2 22h24z"/><path d="M14 9v13"/></svg>
+    <!-- the mark: one spruce (_tools/make_logo.py) -->
+    <svg class="tree" viewBox="-28 0 56 98" aria-hidden="true"><path d="M0 4.0Q1.2 11.7 3.2 19.7Q1.4 14.4 0 13.4Q-1.4 14.4 -3.2 19.7Q-1.2 11.7 0 4.0ZM0 16.9Q3.0 25.2 7.9 33.8Q3.5 28.1 0 27.1Q-3.5 28.1 -7.9 33.8Q-3.0 25.2 0 16.9ZM0 29.8Q4.5 38.7 11.9 47.9Q5.3 41.8 0 40.7Q-5.3 41.8 -11.9 47.9Q-4.5 38.7 0 29.8ZM0 42.6Q6.0 52.2 15.7 62.1Q7.1 55.5 0 54.4Q-7.1 55.5 -15.7 62.1Q-6.0 52.2 0 42.6ZM0 55.5Q7.4 65.7 19.4 76.2Q8.7 69.2 0 68.0Q-8.7 69.2 -19.4 76.2Q-7.4 65.7 0 55.5ZM0 68.4Q8.7 79.2 23.0 90.4Q10.3 82.9 0 81.6Q-10.3 82.9 -23.0 90.4Q-8.7 79.2 0 68.4Z"/><rect x="-1.6" y="84" width="3.2" height="12" rx=".8"/></svg>
     <span>Villa Arka</span>
   </a>
   <div class="bar__right">
@@ -63,7 +66,7 @@
       <li><a href="#razgledaj"><time>18:30</time><span data-i18n="stay.4">Kuća u 360°</span></a></li>
       <li><a href="#wellness"><time>20:00</time><span data-i18n="stay.5">Sauna i wellness</span></a></li>
       <li><a href="#sobe"><time>22:00</time><span data-i18n="stay.6">Sobe</span></a></li>
-      <li><a href="#blagdani"><time>23:59</time><span data-i18n="stay.7">Božić i Nova godina</span></a></li>
+      <li><a href="#bazen"><time>13:00</time><span data-i18n="stay.7">Ljeto · bazen</span></a></li>
       <li><a href="#rezervacija"><time>09:00</time><span data-i18n="stay.8">Jutro poslije · upit</span></a></li>
     </ol>
   </nav>
@@ -216,34 +219,34 @@
     </div>
   </section>
 
-  <!-- 23:59 · CHRISTMAS AND NEW YEAR · pin + bespoke grid zoom. Real photos of
-       the house in a 3x3 grid around the Christmas still; scroll zooms into it
-       until it fills the screen, the garland lights, then the copy and a live
-       count of days (real numbers, computed from today's date). -->
-  <section id="blagdani" class="xmas" data-sc-act="pin" data-sc-span="3" data-hour="23:59" data-date="31. 12." data-temp="22">
-    <div data-sc-stage class="xmas__stage">
-      <div class="zgrid" data-zgrid aria-hidden="true">
-        <figure class="zt"><img src="img/grid/boravak-kamin.webp" width="900" height="562" alt="" loading="lazy" decoding="async"></figure>
-        <figure class="zt"><img src="img/grid/zvijezda.webp" width="900" height="562" alt="" loading="lazy" decoding="async"></figure>
-        <figure class="zt"><img src="img/grid/vino.webp" width="900" height="562" alt="" loading="lazy" decoding="async"></figure>
-        <figure class="zt"><img src="img/grid/kuhinja.webp" width="900" height="562" alt="" loading="lazy" decoding="async"></figure>
-        <figure class="zt zt--c"><img src="img/grid/badnjak-2000.webp" srcset="img/grid/badnjak-1200.webp 1200w, img/grid/badnjak-2000.webp 2000w" sizes="100vw" width="2000" height="1125" alt="" loading="lazy" decoding="async"></figure>
-        <figure class="zt"><img src="img/grid/sauna.webp" width="900" height="562" alt="" loading="lazy" decoding="async"></figure>
-        <figure class="zt"><img src="img/grid/bar.webp" width="900" height="562" alt="" loading="lazy" decoding="async"></figure>
-        <figure class="zt"><img src="img/grid/soba-zvijezda.webp" width="900" height="562" alt="" loading="lazy" decoding="async"></figure>
-        <figure class="zt"><img src="img/grid/boravak-dan.webp" width="900" height="562" alt="" loading="lazy" decoding="async"></figure>
+  <!-- 13:00 · SUMMER · THE POOL · scrub + the opening window. The season
+       flips: a narrow window between the two words of the headline holds the
+       first frame of the user's Kling glide (pool-prompts.md, option 1), and
+       the scroll opens it to the full screen while the camera glides between
+       the loungers to the water (the glide already starts as the section
+       slides in, so the film never sits still while the page moves). The film is only uncovered, never enlarged,
+       so it stays as sharp as the source. site.js draws the window. -->
+  <section id="bazen" class="pool" data-sc-act="scrub" data-sc-span="3.4" data-hour="13:00" data-temp="26">
+    <div data-sc-stage class="pool__stage">
+      <div class="pool__win" data-pool-win>
+        <picture>
+          <source media="(max-width: 860px) and (prefers-reduced-motion: reduce)" srcset="video/bazen-v1-p-end.webp">
+          <source media="(prefers-reduced-motion: reduce)" srcset="video/bazen-v1-end.webp">
+          <source media="(max-width: 860px)" srcset="video/bazen-v1-p.webp">
+          <img class="sc-stage__poster" src="video/bazen-v1.webp" width="1920" height="1080" alt="" loading="lazy" decoding="async">
+        </picture>
+        <video data-sc-scrub data-sc-src="video/bazen-v1.mp4" data-sc-src-mobile="video/bazen-v1-p.mp4"
+               data-av1="video/bazen-v1.av1.mp4" data-av1-mobile="video/bazen-v1-p.av1.mp4" muted playsinline></video>
+        <div class="pool__scrim" aria-hidden="true"></div>
       </div>
-      <div class="xmas__scrim" aria-hidden="true"></div>
-      <svg class="garland" viewBox="0 0 1600 140" preserveAspectRatio="none" aria-hidden="true" data-garland></svg>
-      <p class="xmas__date" data-sc-cue="0 0.32 0 0.4" aria-hidden="true">24. 12. &middot; 31. 12.</p>
-      <div class="sc-copy sc-copy--lead xmas__copy" data-sc-cue="0.6 1 0.2 0.08">
-        <h2 class="sc-display sc-display--lg" data-i18n="xmas.h">Božić i Nova godina u šumi.</h2>
-        <p class="sc-body" data-i18n="xmas.p">Badnjak uz kamin, ponoć na snijegu, Nova godina bez gužve i bez rezervacije stola. Kuća prima do deset gostiju, pa blagdanske termine vrijedi pitati na vrijeme.</p>
-        <div class="xmas__count">
-          <p><span class="xmas__n" data-days="12-24" data-sc-count-at="0.66 0.86">0</span> <span data-i18n="xmas.d1">dana do Badnjaka</span></p>
-          <p><span class="xmas__n" data-days="12-31" data-sc-count-at="0.68 0.88">0</span> <span data-i18n="xmas.d2">dana do Silvestrova</span></p>
-        </div>
-        <p><a class="btn btn--solid" href="#rezervacija" data-i18n="cta">Rezerviraj</a></p>
+      <h2 class="pool__title"><span class="pool__w" data-i18n="pool.w1">Ljeto</span> <span class="pool__w" data-i18n="pool.w2">u šumi</span></h2>
+      <div class="sc-copy sc-copy--lead pool__copy" data-sc-cue="0.66 1 0.22 0.1">
+        <h3 class="sc-display sc-display--lg" data-sc-kinetic="lines" data-i18n="pool.h2">Bazen među smrekama.</h3>
+        <p class="sc-body" data-i18n="pool.p2">Vanjski bazen, drvena terasa s ležaljkama i sunce koje se probija kroz krošnje. Zimi se okupljate oko kamina, ljeti oko vode.</p>
+        <p class="pool__acts">
+          <button class="btn btn--glow" type="button" data-tour="bazen" data-i18n="pool.btn">Pogledaj bazen u 360°</button>
+          <a class="btn" href="#rezervacija" data-i18n="cta">Rezerviraj</a>
+        </p>
       </div>
     </div>
   </section>

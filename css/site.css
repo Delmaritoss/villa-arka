@@ -82,7 +82,7 @@ body { font-weight: 350; letter-spacing: 0.005em; }
   transition: color 300ms var(--sc-ease-out);
 }
 .bar__mark { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; font: 450 1.2rem/1 var(--sc-font-display); letter-spacing: -0.01em; }
-.bar__mark svg { width: 1.6rem; height: 1.4rem; fill: none; stroke: var(--sc-accent); stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+.bar__mark .tree { width: 1.3rem; height: 2.3rem; flex: none; fill: var(--sc-accent); }
 .bar__right { display: flex; align-items: center; gap: .65rem; }
 
 .clock {
@@ -232,34 +232,23 @@ body { font-weight: 350; letter-spacing: 0.005em; }
   .rail > .room, .rail > .rail__facts { opacity: max(.55, min(1, calc((var(--sc-p, 0) * 6) - var(--i, 0) + 1.2))); }
 }
 
-/* ---------------------------------------------------- 23:59 christmas + NY
-   The grid zoom: every tile sits at the stage centre and site.js places it
-   with one transform per frame. Outer tiles are laid out at twice their cell
-   size and scaled down, so they stay sharp as the zoom enlarges them; the
-   centre is laid out at full viewport size, so it ends at 1:1. */
-.xmas__stage { background: #0E0906; }
-.zgrid { position: absolute; inset: 0; }
-.zt { position: absolute; left: 50%; top: 50%; margin: 0; overflow: hidden; border-radius: 6px;
-  width: var(--tw2, 40vw); height: var(--th2, 25vw); backface-visibility: hidden;
-  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .7); }
-.zt img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.82) saturate(.92); }
-.zt--c { width: 100vw; height: 100%; border-radius: 0; box-shadow: none; z-index: 1; }
-.zt--c img { filter: none; }
-.xmas__scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: var(--xs, 0);
-  background: linear-gradient(90deg, rgba(14, 9, 6, .92) 0%, rgba(14, 9, 6, .78) 30%, rgba(14, 9, 6, .25) 58%, rgba(14, 9, 6, 0) 74%); }
-.xmas .garland { z-index: 3; top: calc(var(--bar-h) - .5rem); }
-.xmas__date { position: absolute; z-index: 4; left: 50%; bottom: clamp(1.5rem, 5vh, 3rem); margin: 0; transform: translateX(-50%);
-  font: 500 var(--sc-t-sm)/1 var(--sc-font-text); letter-spacing: .2em; color: #EBA45C; white-space: nowrap;
-  padding: .6rem .9rem; border-radius: var(--r); background: rgba(14, 9, 6, .88); }
-.xmas__copy { z-index: 5; max-width: min(36rem, 86vw); }
-.xmas__copy .sc-body { color: var(--sc-ink); margin-top: var(--sc-4); }
-.xmas__count { display: flex; gap: var(--sc-7); margin-top: var(--sc-5); }
-.xmas__count p { margin: 0; display: flex; flex-direction: column; gap: var(--sc-2); color: var(--sc-ink-soft); font-size: var(--sc-t-sm); }
-.xmas__n { font: 330 clamp(3rem, 2.2rem + 3vw, 4.8rem)/1 var(--sc-font-display); color: var(--sc-accent); letter-spacing: -0.03em; }
-.xmas__copy .btn { margin-top: var(--sc-5); }
+/* ------------------------------------------ 13:00 summer: the pool window
+   site.js sets the window's clip-path and places the two words from cached
+   numbers once per frame; the film itself never moves or scales. */
+.pool__stage { background: #0C1611; }
+.pool__win { position: absolute; inset: 0; overflow: hidden; clip-path: inset(16% 36% 16% 36% round 8px); }
+.pool__win img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pool__scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0;
+  background: radial-gradient(88% 96% at 0% 100%, rgba(6, 12, 10, .94) 0%, rgba(6, 12, 10, .86) 40%, rgba(6, 12, 10, .5) 68%, rgba(6, 12, 10, 0) 100%); }
+.pool__title { position: absolute; inset: 0; z-index: 6; margin: 0; pointer-events: none;
+  font: 330 var(--pool-fs, 7vw)/.92 var(--sc-font-display); letter-spacing: -0.035em; color: #F3EBDD; }
+.pool__w { position: absolute; left: 0; top: 0; white-space: nowrap; }
+.pool.is-live .pool__w { will-change: transform, opacity; }
+.pool__copy { z-index: 20; max-width: min(36rem, 86vw); }
+.pool__copy .sc-body { color: var(--sc-ink); margin-top: var(--sc-4); max-width: 44ch; }
+.pool__acts { display: flex; flex-wrap: wrap; gap: var(--sc-3); margin: var(--sc-5) 0 0; }
 @media (max-width: 860px) {
-  .zt--c img { object-position: 74% 50%; } /* keep the tree and the fire in a portrait crop */
-  .xmas__scrim { background: linear-gradient(to top, rgba(14, 9, 6, .95) 0%, rgba(14, 9, 6, .86) 42%, rgba(14, 9, 6, .3) 66%, rgba(14, 9, 6, 0) 80%); }
+  .pool__scrim { background: linear-gradient(to top, rgba(6, 12, 10, .94) 0%, rgba(6, 12, 10, .84) 34%, rgba(6, 12, 10, .4) 56%, rgba(6, 12, 10, 0) 72%); }
 }
 
 /* ---------------------------------------- 09:00 the morning after (light) */
@@ -367,7 +356,7 @@ body { font-weight: 350; letter-spacing: 0.005em; }
   .look__scrim { background: linear-gradient(to top, color-mix(in oklab, var(--sc-canvas) 95%, transparent) 0%, color-mix(in oklab, var(--sc-canvas) 86%, transparent) 30%, color-mix(in oklab, var(--sc-canvas) 40%, transparent) 50%, transparent 66%); }
   .look__copy .sc-body { margin-left: 0; }
   .look__compass { display: none; }
-  .well__grid, .xmas__grid, .morning__grid { grid-template-columns: 1fr; }
+  .well__grid, .morning__grid { grid-template-columns: 1fr; }
   .well__media { height: 62vh; }
   .well__a { inset: 0 8% 22% 0; }
   .well__b { width: 52%; }
@@ -443,22 +432,8 @@ body { font-weight: 350; letter-spacing: 0.005em; }
 /* the rooms travel on a curve: cards turn toward you as they pass */
 /* each card carries its own perspective(); no shared 3D context, so cards never sink behind the rail for clicks */
 .room { transform-origin: 50% 50%; }
-.rooms.is-live .room, .xmas.is-live .zt { will-change: transform; }
+.rooms.is-live .room { will-change: transform; }
 
-/* Christmas: a garland that lights bulb by bulb */
-.xmas { position: relative; }
-.garland { position: absolute; left: 0; top: clamp(.5rem, 2vw, 2rem); width: 100%; height: clamp(5rem, 9vw, 8.5rem); overflow: visible; pointer-events: none; }
-.garland path { fill: none; stroke: #5A4330; stroke-width: 2; vector-effect: non-scaling-stroke; }
-.garland circle { fill: #3A2A1E; transition: fill 260ms var(--sc-ease-out); }
-.garland circle.on { fill: #FFE2B0; }
-.garland circle.on:nth-child(3n) { fill: #FFB25E; }
-.garland .halo { fill: url(#bulb-glow); opacity: 0; transition: opacity 400ms var(--sc-ease-out); }
-.garland .halo.on { opacity: .8; }
-@media (prefers-reduced-motion: no-preference) {
-  .garland .halo.on:nth-child(4n) { animation: twinkle 3.2s ease-in-out infinite; }
-  .garland .halo.on:nth-child(4n+2) { animation: twinkle 4.1s ease-in-out .8s infinite; }
-}
-@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 
 /* the request form: a live summary of the stay being asked for */
 .ask__sum { margin: 0; padding: .9rem 1rem; border-radius: var(--r); background: #FFFFFF; border: 1px solid var(--sc-hairline); color: var(--sc-ink); font-size: var(--sc-t-sm); }
